@@ -1,4 +1,4 @@
-import { Worker, isMainThread, parentPort } from 'worker_threads'
+import { Worker } from 'worker_threads'
 
 const worker = new Worker('./worker-thread.mjs')
 
