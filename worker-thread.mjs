@@ -3,7 +3,8 @@ import { Worker, isMainThread, parentPort } from 'worker_threads'
 const min = 2;
 const max = 1e6;
 const primes = [];
-function generatePrimes(start, range) {
+
+const generatePrimes = (start, range) => {
   let isPrime = true;
   let end = start + range;
   for (let i = start; i < end; i++) {
