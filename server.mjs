@@ -5,7 +5,16 @@ const cpus = os.cpus().length
 
 console.log(cpus)
 
-const worker = new Worker('./worker-thread.mjs', { workerData: { start: 2, range: 1000000 } })
+const interval = []
+
+let index = 0
+while (index < 1000000) {
+  interval.push({ start: index, range: index += 10000 })
+}
+
+console.log(interval)
+
+const worker = new Worker('./worker-thread.mjs', { workerData: interval[0] })
 
 const NS_PER_SEC = 1e9
 const time = process.hrtime()
