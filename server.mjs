@@ -1,4 +1,9 @@
 import { Worker } from 'worker_threads'
+import os from 'os'
+
+const cpus = os.cpus().length
+
+console.log(cpus)
 
 const worker = new Worker('./worker-thread.mjs')
 

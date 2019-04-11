@@ -1,7 +1,7 @@
 import { parentPort } from 'worker_threads'
 
 const min = 2
-const max = 1e7
+const max = 1e6
 const primes = []
 
 const generatePrimes = (start, range) => {
