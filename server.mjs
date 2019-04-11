@@ -15,3 +15,7 @@ worker.on('message', msg => {
   const diff = process.hrtime(time)
   console.log(`Benchmark took ${diff[0] + diff[1] / NS_PER_SEC} seconds`)
 })
+
+worker.on('exit', param => {
+  console.log('worker exits', param)
+})
