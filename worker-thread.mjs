@@ -1,14 +1,12 @@
-import { parentPort } from 'worker_threads'
+import { parentPort, workerData } from 'worker_threads'
 
-const min = 2
-const max = 1e6
 const primes = []
 
 const generatePrimes = (start, range) => {
   let isPrime = true
   let end = start + range
   for (let i = start; i < end; i++) {
-    for (let j = min; j < Math.sqrt(end); j++) {
+    for (let j = start; j < Math.sqrt(end); j++) {
       if (i !== j && i % j === 0) {
         isPrime = false
         break
@@ -20,6 +18,6 @@ const generatePrimes = (start, range) => {
     isPrime = true
   }
 }
-generatePrimes(min, max)
+generatePrimes(workerData.start, workerData.range)
 
 parentPort.postMessage(primes)

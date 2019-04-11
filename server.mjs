@@ -5,7 +5,7 @@ const cpus = os.cpus().length
 
 console.log(cpus)
 
-const worker = new Worker('./worker-thread.mjs')
+const worker = new Worker('./worker-thread.mjs', { workerData: { start: 2, range: 1000000 } })
 
 const NS_PER_SEC = 1e9
 const time = process.hrtime()
