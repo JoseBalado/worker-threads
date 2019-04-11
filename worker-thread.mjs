@@ -1,4 +1,4 @@
-import { parentPort, workerData } from 'worker_threads'
+import { parentPort } from 'worker_threads'
 
 const primes = []
 
@@ -20,6 +20,7 @@ const generatePrimes = (start, range) => {
   }
 }
 
-generatePrimes(workerData.start, workerData.range)
-
-parentPort.postMessage(primes)
+parentPort.on('message', param => {
+  generatePrimes(param.start, param.range)
+  parentPort.postMessage(primes)
+})
