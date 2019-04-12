@@ -1,6 +1,5 @@
 import { Worker } from 'worker_threads'
 import os from 'os'
-import { workers } from 'cluster';
 
 const interval = []
 let index = 0
