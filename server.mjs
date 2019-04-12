@@ -16,7 +16,7 @@ for (let index = 0; index < (os.cpus().length - 1); index++) {
 }
 
 const executeWork = () => {
-  workersPoll.id0.worker.postMessage(interval.pop())
+  workersPoll.id0.worker.postMessage({ id: 'id0', interval: interval.pop() })
 }
 
 const NS_PER_SEC = 1e9
@@ -31,7 +31,7 @@ workersPoll.id0.worker.on('message', msg => {
     interval.length || workersPoll.id0.worker.terminate()
     console.log(`Benchmark took ${diff[0] + diff[1] / NS_PER_SEC} seconds`)
   }
-  interval.length && workersPoll.id0.worker.postMessage(interval.pop())
+  interval.length && executeWork()
 })
 
 workersPoll.id0.worker.on('exit', param => {
