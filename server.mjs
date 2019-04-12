@@ -9,7 +9,7 @@ const interval = []
 
 let index = 0
 while (index < 100000) {
-  interval.push({ start: index, range: index += 9999 })
+  interval.push({ start: index, end: index += 9999 })
   index++
 }
 
@@ -28,8 +28,8 @@ worker.on('message', msg => {
   console.log(`Benchmark took ${diff[0] + diff[1] / NS_PER_SEC} seconds`)
 
   console.log('il', interval.length)
-  interval.length && worker.postMessage(interval.pop())
   interval.length || worker.terminate()
+  interval.length && worker.postMessage(interval.pop())
 })
 
 worker.on('exit', param => {
