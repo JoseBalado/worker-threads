@@ -17,7 +17,7 @@ console.log('interval', interval)
 
 const worker = new Worker('./worker-thread.mjs')
 
-worker.postMessage({ start: interval[0].start, range: interval[0].range })
+worker.postMessage(interval.pop())
 
 const NS_PER_SEC = 1e9
 const time = process.hrtime()
