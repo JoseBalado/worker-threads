@@ -15,7 +15,9 @@ for (let index = 0; index < (os.cpus().length - 1); index++) {
   workersPoll[`id${index}`] = { idle: true, worker: new Worker('./worker-thread.mjs') }
 }
 
-workersPoll.id0.worker.postMessage(interval.pop())
+const executeWork = () => {
+  workersPoll.id0.worker.postMessage(interval.pop())
+}
 
 const NS_PER_SEC = 1e9
 const time = process.hrtime()
@@ -38,3 +40,5 @@ workersPoll.id0.worker.on('exit', param => {
   // Needed to finish with node application
   Object.keys(workersPoll).forEach(id => workersPoll[id].worker.terminate())
 })
+
+executeWork()
