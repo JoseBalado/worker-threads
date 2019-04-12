@@ -1,5 +1,6 @@
 import { Worker } from 'worker_threads'
 import os from 'os'
+import { workers } from 'cluster';
 
 const cpus = os.cpus().length
 
@@ -15,25 +16,31 @@ while (index < 1000000000) {
 
 console.log('interval', interval)
 
-const worker = new Worker('./worker-thread.mjs')
+const workersPoll = []
+for (let index = 0; index < (os.cpus().length - 1); index++) {
+  workersPoll.push(new Worker('./worker-thread.mjs'))
+}
 
-worker.postMessage(interval.pop())
+workersPoll[0].postMessage(interval.pop())
 
 const NS_PER_SEC = 1e9
 const time = process.hrtime()
 
-worker.on('message', msg => {
+workersPoll[0].on('message', msg => {
   // console.log('msg: ', msg)
   const diff = process.hrtime(time)
 
   console.log('il', interval.length)
   if(interval.length === 0) {
-    interval.length || worker.terminate()
+    interval.length || workersPoll[0].terminate()
     console.log(`Benchmark took ${diff[0] + diff[1] / NS_PER_SEC} seconds`)
   }
-  interval.length && worker.postMessage(interval.pop())
+  interval.length && workersPoll[0].postMessage(interval.pop())
 })
 
-worker.on('exit', param => {
+workersPoll[0].on('exit', param => {
   console.log('worker exits', param)
+
+  // Needed to finish with node application
+  workersPoll.map(worker => worker.terminate())
 })
