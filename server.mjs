@@ -2,12 +2,7 @@ import { Worker } from 'worker_threads'
 import os from 'os'
 import { workers } from 'cluster';
 
-const cpus = os.cpus().length
-
-console.log(cpus)
-
 const interval = []
-
 let index = 0
 while (index < 1000000000) {
   interval.push({ start: index, end: index += 99999999 })
