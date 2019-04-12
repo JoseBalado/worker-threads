@@ -17,7 +17,7 @@ for (let index = 0; index < (os.cpus().length - 1); index++) {
 }
 
 const executeWork = () => {
-  workersPoll.id1.worker.postMessage({ id: workersPoll.id1.worker.threadId, interval: interval.pop() })
+  workersPoll.id1.worker.postMessage({ id: `id${workersPoll.id1.worker.threadId}`, interval: interval.pop() })
   workersPoll.id1.idle = false
 }
 
