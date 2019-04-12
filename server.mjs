@@ -28,7 +28,7 @@ workersPoll.id1.worker.on('message', msg => {
   // console.log('msg: ', msg)
   const diff = process.hrtime(time)
 
-  console.log('il', interval.length)
+  console.log('Number of work to be completed', interval.length)
   if(interval.length === 0) {
     interval.length || workersPoll.id1.worker.terminate()
     console.log(`Benchmark took ${diff[0] + diff[1] / NS_PER_SEC} seconds`)
