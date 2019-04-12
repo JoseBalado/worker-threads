@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Launch Program",
             "program": "${workspaceFolder}/server.mjs",
-            "runtimeExecutable": "${env:HOME}/.nvm/versions/node/v11.13.0/bin/node",
+            "runtimeExecutable": "${env:HOME}/.nvm/versions/node/v11.14.0/bin/node",
             "runtimeArgs": [
                 "--experimental-modules",
                 "--nolazy",
