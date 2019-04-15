@@ -1,6 +1,6 @@
 import { parentPort } from 'worker_threads'
 
-const expensiveFunction = (id, start, end) => {
+const expensiveFunction = (start, end) => {
   const result = []
   for (let index = start; index <= end; index++) {
     if (index % 7 === 0) {
@@ -20,9 +20,9 @@ const expensiveFunction = (id, start, end) => {
     }
   }
 
-  parentPort.postMessage({ id: id, result: result })
+  parentPort.postMessage(result)
 }
 
 parentPort.on('message', data => {
-  expensiveFunction(data.id, data.interval.start, data.interval.end)
+  expensiveFunction(data.start, data.end)
 })

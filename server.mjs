@@ -17,10 +17,7 @@ for (let index = 0; index < (os.cpus().length - 1); index++) {
 }
 
 const workerOnMessage = id => message => {
-  console.log('-- in workerOnMessage() function: ')
-  console.log('-- message from worker: ', id)
-  // console.log('message: ', message)
-  console.log('-- Number of work to be completed', interval.length)
+  console.log('-- message from worker:', id, ', Number of works to be completed', interval.length, ', Message[0]: ', message[0])
   workersPoll[id].idle = true
 
   // Terminate this thread if there is no more work to be done
@@ -42,7 +39,7 @@ const executeWork = () => {
   const workersIndex = Object.keys(workersPoll)
   for (let id of workersIndex) {
     if (workersPoll[id].idle === true && interval.length > 0) {
-      workersPoll[id].worker.postMessage({ id: `id${workersPoll[id].worker.threadId}`, interval: interval.pop() })
+      workersPoll[id].worker.postMessage(interval.pop())
       workersPoll[id].idle = false
     }
   }
