@@ -20,16 +20,21 @@ Object.keys(workersPoll).forEach(id => {
   workersPoll[id].worker.on('message', msg => {
     console.log('message from worker: ', msg.id)
     console.log('Number of work to be completed', interval.length)
+    workersPoll[id].idle = true
+
+    // Terminate this thread if there is no more work to be done
+    interval.length || workersPoll[id].worker.terminate()
+
     executeWork()
   })
 })
 
+const NS_PER_SEC = 1e9
+const time = process.hrtime()
+
 const executeWork = () => {
-  if(interval.length === 0){
-    Object.keys(workersPoll).forEach(id => workersPoll[id].worker.terminate())
-    const diff = process.hrtime(time)
-    console.log(`Benchmark took ${diff[0] + diff[1] / NS_PER_SEC} seconds`)
-  }
+  console.log('in executework() function')
+  let terminateAllWorkers = true
 
   const workersIndex = Object.keys(workersPoll)
   for(let id of workersIndex) {
@@ -38,14 +43,20 @@ const executeWork = () => {
       workersPoll[id].idle = false
     }
   }
+
+  // Code to benchmark time
+  if (interval.length === 0) {
+    let allWorkersIdle = true
+    for (let id of workersIndex) {
+      if (workersPoll[id].idle === false) {
+        allWorkersIdle = false
+      }
+    }
+    if(allWorkersIdle) {
+      const diff = process.hrtime(time)
+      console.log(`Benchmark took ${diff[0] + diff[1] / NS_PER_SEC} seconds`)
+    }
+  }
 }
-
-const NS_PER_SEC = 1e9
-const time = process.hrtime()
-
-workersPoll.id1.worker.on('message', msg => {
-  workersPoll.id1.idle = true
-  executeWork()
-})
 
 executeWork()
