@@ -18,8 +18,8 @@ for (let index = 0; index < (os.cpus().length - 1); index++) {
 
 Object.keys(workersPoll).forEach(id => {
   workersPoll[id].worker.on('message', msg => {
-    console.log('message from worker: ', msg.id)
-    console.log('Number of work to be completed', interval.length)
+    console.log('-- message from worker: ', msg.id)
+    console.log('-- Number of work to be completed', interval.length)
     workersPoll[id].idle = true
 
     // Terminate this thread if there is no more work to be done
@@ -33,12 +33,11 @@ const NS_PER_SEC = 1e9
 const time = process.hrtime()
 
 const executeWork = () => {
-  console.log('in executework() function')
-  let terminateAllWorkers = true
+  console.log('in executeWork() function')
 
   const workersIndex = Object.keys(workersPoll)
-  for(let id of workersIndex) {
-    if(workersPoll[id].idle === true && interval.length > 0) {
+  for (let id of workersIndex) {
+    if (workersPoll[id].idle === true && interval.length > 0) {
       workersPoll[id].worker.postMessage({ id: `id${workersPoll[id].worker.threadId}`, interval: interval.pop() })
       workersPoll[id].idle = false
     }
@@ -52,7 +51,7 @@ const executeWork = () => {
         allWorkersIdle = false
       }
     }
-    if(allWorkersIdle) {
+    if (allWorkersIdle) {
       const diff = process.hrtime(time)
       console.log(`Benchmark took ${diff[0] + diff[1] / NS_PER_SEC} seconds`)
     }
