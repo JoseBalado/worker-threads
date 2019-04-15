@@ -17,8 +17,13 @@ for (let index = 0; index < (os.cpus().length - 1); index++) {
 }
 
 const executeWork = () => {
-  workersPoll.id1.worker.postMessage({ id: `id${workersPoll.id1.worker.threadId}`, interval: interval.pop() })
-  workersPoll.id1.idle = false
+  const workersIndex = Object.keys(workersPoll)
+  for(let id of workersIndex) {
+    if(workersPoll[id].idle === true && interval.length > 0) {
+      workersPoll[id].worker.postMessage({ id: `id${workersPoll[id].worker.threadId}`, interval: interval.pop() })
+      workersPoll[id].idle = false
+    }
+  }
 }
 
 const NS_PER_SEC = 1e9
@@ -26,6 +31,9 @@ const time = process.hrtime()
 
 workersPoll.id1.worker.on('message', msg => {
   // console.log('msg: ', msg)
+
+  workersPoll.id1.idle = true
+
   const diff = process.hrtime(time)
 
   console.log('Number of work to be completed', interval.length)
