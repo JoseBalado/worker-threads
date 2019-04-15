@@ -26,6 +26,8 @@ Object.keys(workersPoll).forEach(id => {
 const executeWork = () => {
   if(interval.length === 0){
     Object.keys(workersPoll).forEach(id => workersPoll[id].worker.terminate())
+    const diff = process.hrtime(time)
+    console.log(`Benchmark took ${diff[0] + diff[1] / NS_PER_SEC} seconds`)
   }
 
   const workersIndex = Object.keys(workersPoll)
@@ -45,14 +47,8 @@ workersPoll.id1.worker.on('message', msg => {
 
   workersPoll.id1.idle = true
 
-
   console.log('Number of work to be completed', interval.length)
-  if(interval.length === 0) {
-    interval.length || workersPoll.id1.worker.terminate()
-    const diff = process.hrtime(time)
-    console.log(`Benchmark took ${diff[0] + diff[1] / NS_PER_SEC} seconds`)
-  }
-  interval.length && executeWork()
+  executeWork()
 })
 
 executeWork()
