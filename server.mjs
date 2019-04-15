@@ -19,6 +19,7 @@ for (let index = 0; index < (os.cpus().length - 1); index++) {
 Object.keys(workersPoll).forEach(id => {
   workersPoll[id].worker.on('message', msg => {
     console.log('message from worker: ', msg.id)
+    console.log('Number of work to be completed', interval.length)
     executeWork()
   })
 })
@@ -43,11 +44,7 @@ const NS_PER_SEC = 1e9
 const time = process.hrtime()
 
 workersPoll.id1.worker.on('message', msg => {
-  // console.log('msg: ', msg)
-
   workersPoll.id1.idle = true
-
-  console.log('Number of work to be completed', interval.length)
   executeWork()
 })
 
