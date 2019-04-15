@@ -17,13 +17,17 @@ for (let index = 0; index < (os.cpus().length - 1); index++) {
 }
 
 Object.keys(workersPoll).forEach(id => {
-  console.log('id', id)
   workersPoll[id].worker.on('message', msg => {
     console.log('message from worker: ', msg.id)
+    executeWork()
   })
 })
 
 const executeWork = () => {
+  if(interval.length === 0){
+    Object.keys(workersPoll).forEach(id => workersPoll[id].worker.terminate())
+  }
+
   const workersIndex = Object.keys(workersPoll)
   for(let id of workersIndex) {
     if(workersPoll[id].idle === true && interval.length > 0) {
@@ -49,13 +53,6 @@ workersPoll.id1.worker.on('message', msg => {
     console.log(`Benchmark took ${diff[0] + diff[1] / NS_PER_SEC} seconds`)
   }
   interval.length && executeWork()
-})
-
-workersPoll.id1.worker.on('exit', param => {
-  console.log('worker exits', param)
-
-  // Needed to finish with node application
-  Object.keys(workersPoll).forEach(id => workersPoll[id].worker.terminate())
 })
 
 executeWork()
