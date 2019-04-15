@@ -16,24 +16,28 @@ for (let index = 0; index < (os.cpus().length - 1); index++) {
   workersPoll[`id${worker.threadId}`] = { idle: true, worker }
 }
 
+const workerOnMessage = id => message => {
+  console.log('-- in workerOnMessage() function: ')
+  console.log('-- message from worker: ', id)
+  // console.log('message: ', message)
+  console.log('-- Number of work to be completed', interval.length)
+  workersPoll[id].idle = true
+
+  // Terminate this thread if there is no more work to be done
+  interval.length || workersPoll[id].worker.terminate()
+
+  executeWork()
+}
+
 Object.keys(workersPoll).forEach(id => {
-  workersPoll[id].worker.on('message', msg => {
-    console.log('-- message from worker: ', msg.id)
-    console.log('-- Number of work to be completed', interval.length)
-    workersPoll[id].idle = true
-
-    // Terminate this thread if there is no more work to be done
-    interval.length || workersPoll[id].worker.terminate()
-
-    executeWork()
-  })
+  workersPoll[id].worker.on('message', workerOnMessage(id))
 })
 
 const NS_PER_SEC = 1e9
 const time = process.hrtime()
 
 const executeWork = () => {
-  console.log('in executeWork() function')
+  console.log('// in executeWork() function')
 
   const workersIndex = Object.keys(workersPoll)
   for (let id of workersIndex) {
