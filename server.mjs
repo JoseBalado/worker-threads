@@ -16,6 +16,13 @@ for (let index = 0; index < (os.cpus().length - 1); index++) {
   workersPoll[`id${worker.threadId}`] = { idle: true, worker }
 }
 
+Object.keys(workersPoll).forEach(id => {
+  console.log('id', id)
+  workersPoll[id].worker.on('message', msg => {
+    console.log('message from worker: ', msg.id)
+  })
+})
+
 const executeWork = () => {
   const workersIndex = Object.keys(workersPoll)
   for(let id of workersIndex) {
@@ -34,11 +41,11 @@ workersPoll.id1.worker.on('message', msg => {
 
   workersPoll.id1.idle = true
 
-  const diff = process.hrtime(time)
 
   console.log('Number of work to be completed', interval.length)
   if(interval.length === 0) {
     interval.length || workersPoll.id1.worker.terminate()
+    const diff = process.hrtime(time)
     console.log(`Benchmark took ${diff[0] + diff[1] / NS_PER_SEC} seconds`)
   }
   interval.length && executeWork()
