@@ -13,7 +13,7 @@ console.log('interval', interval)
 const workersPoll = {}
 // Best number of worker threads is half of cpu cores plus one
 for (let index = 0; index < (os.cpus().length - 3); index++) {
-  const worker = new Worker('./worker-thread.mjs')
+  const worker = new Worker('./worker-thread.js')
   workersPoll[`id${worker.threadId}`] = { idle: true, worker }
 }
 
